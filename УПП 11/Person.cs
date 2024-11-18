@@ -1,4 +1,4 @@
-﻿public enum TimeFrame { Year, TwoYears, Long }
+﻿enum TimeFrame { Year, TwoYears, Long }
 
 class Person
 {
@@ -15,7 +15,7 @@ class Person
 
     public Person()
     {
-        name = "default";
+        name = "defaul";
         surname = "default";
         birthDate = new DateTime(1, 01, 2000);
     }
