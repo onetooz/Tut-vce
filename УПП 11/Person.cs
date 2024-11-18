@@ -1,4 +1,5 @@
 ﻿public enum TimeFrame { Year, TwoYears, Long }
+
 class Person
 {
     private string name;
@@ -14,8 +15,8 @@ class Person
 
     public Person()
     {
-        name = "Имя по умолчанию";
-        surname = "Фамилия по умолчанию";
+        name = "default";
+        surname = "default";
         birthDate = new DateTime(1, 01, 2000);
     }
 
@@ -47,4 +48,10 @@ class Person
     {
         return $"Имя: {name}, Фамилия: {surname}, Дата рождения: {birthDate.ToShortDateString()}";
     }
+
+    public virtual string ToShortString()
+    {
+        return $"{name} {surname}";
+    }
 }
+
