@@ -15,7 +15,7 @@ class Person
 
     public Person()
     {
-        name = "defaul";
+        name = "default";
         surname = "default";
         birthDate = new DateTime(1, 01, 2000);
     }
