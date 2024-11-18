@@ -1,4 +1,4 @@
-﻿public enum TimeFrame { Year, TwoYears, Long }
+﻿enum TimeFrame { Year, TwoYears, Long }
 class Person
 {
     private string name;
