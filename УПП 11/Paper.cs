@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace УПП_11
 {
-    class Paper
+    public class Paper
     {
         public string title { get; set; }
         public Person author { get; set; }
