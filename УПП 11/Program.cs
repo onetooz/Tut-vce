@@ -134,23 +134,3 @@ public class ResearchTeam
         return "Тема исследований : " + theme + "\nНазвание исследовательской огранизации : " + orgname + "\nРегистрационный номер исследований : " + regnum + "\nВремя отведённое на исследования : " + time;
     }
 }
-
-public class Programm
-{
-    public static void Main()
-    {
-        TimeFrame time = TimeFrame.Year;
-        int n = 1;
-        ResearchTeam bag = new ResearchTeam("Литералы", "Лобачи Интернешнл", 12, time);
-        DateTime birthday = new DateTime(2001, 07, 11);
-        DateTime pubtime = new DateTime(2020, 03, 23);
-        Person Vania = new Person("Vania", "Lobach", birthday);
-        Paper[] mas = new Paper[n];
-        for (int i = 0; i < n; i++)
-        {
-            bag.AddPaper();
-        }
-        Console.WriteLine(bag.ToString());
-        Console.WriteLine(bag[time]);
-    }
-}
