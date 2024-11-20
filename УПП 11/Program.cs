@@ -1,6 +1,6 @@
 ﻿enum TimeFrame { Year, TwoYears, Long }
 
-class Person
+public class Person
 {
     private string name;
     private string surname;
