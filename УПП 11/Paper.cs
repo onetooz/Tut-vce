@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using УПП_11;
+
 
 namespace УПП_11
 {
-    class Paper
+    public class Paper
     {
         public string title { get; set; }
         public Person author { get; set; }

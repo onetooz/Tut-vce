@@ -1,10 +1,10 @@
-﻿enum TimeFrame { Year, TwoYears, Long }
+﻿
 
 public class Person
 {
-    private string name;
-    private string surname;
-    private DateTime birthDate;
+    public string name;
+    public string surname;
+    public DateTime birthDate;
 
     public Person(string name, string surname, DateTime birthDate)
     {
@@ -17,7 +17,7 @@ public class Person
     {
         name = "default";
         surname = "default";
-        birthDate = new DateTime(1, 01, 2000);
+        birthDate = new DateTime(2000, 01, 1);
     }
 
     public string Name
