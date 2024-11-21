@@ -134,4 +134,9 @@ public class ResearchTeam
     {
         return "Тема исследований : " + theme + "\nНазвание исследовательской огранизации : " + orgname + "\nРегистрационный номер исследований : " + regnum + "\nВремя отведённое на исследования : " + time;
     }
+
+    //public void AddPaper(params Paper[] papers)
+    //{
+    //    throw new NotImplementedException();
+    //}
 }

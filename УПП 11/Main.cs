@@ -51,6 +51,7 @@ public class Programm
             Console.WriteLine($"\nДобавление публикации {i + 1}:");
             researchTeam.AddPaper();
         }
+      //  researchTeam.AddPaper(new Paper(), new Paper(),new Paper());
 
         Console.WriteLine("\nДанные после добавления публикаций:");
         Console.WriteLine(researchTeam.ToString());
@@ -105,7 +106,7 @@ public class Programm
         watch.Restart();
         for (int i = 0; i < size; i++)
         {
-            var q = one[i];
+            one[i].title="qwerty";
         }
         watch.Stop();
         Console.WriteLine($"Время работы с одномерным массивом: {watch.ElapsedMilliseconds} ms");
@@ -114,7 +115,7 @@ public class Programm
         for (int i = 0; i < 100; i++)
             for (int j = 0; j < 1000; j++)
             {
-                var q = two[i, j];
+                two[i, j].title="qwerty";
             }
         watch.Stop();
         Console.WriteLine($"Время работы с двумерным массивом: {watch.ElapsedMilliseconds} ms");
@@ -123,7 +124,7 @@ public class Programm
         for (int i = 0; i < 100; i++)
             for (int j = 0; j < 1000; j++)
             {
-                var q = Ar[i][j];
+                Ar[i][j].title="qwerty";
             }
         watch.Stop();
         Console.WriteLine($"Время работы с зубчатым массивом: {watch.ElapsedMilliseconds} ms");
