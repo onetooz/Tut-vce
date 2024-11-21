@@ -56,7 +56,7 @@ public class Programm
         Console.WriteLine(researchTeam.ToString());
 
  
-        Paper latestPaper = FindLatestPublication(researchTeam.Publications);
+        Paper latestPaper = Find(researchTeam.Publications);
         if (latestPaper != null)
         {
             Console.WriteLine("\nСамая поздняя публикация:");
@@ -64,10 +64,10 @@ public class Programm
         }
 
         Console.WriteLine("\nСравнение времени работы с массивами...");
-        CompareArrayPerformance();
+        Comp();
     }
 
-    static Paper FindLatestPublication(Paper[] publications)
+    static Paper Find(Paper[] publications)
     {
         if (publications == null || publications.Length == 0) return null;
 
@@ -80,16 +80,18 @@ public class Programm
         return latest;
     }
 
-    static void CompareArrayPerformance()
+    static void Comp()
     {
         int size = 100000;
         var one = new Paper[size];
         var two = new Paper[100, 1000];
         var Ar = new Paper[100][];
-        for (int i = 0; i < 100; i++) Ar[i] = new Paper[1000];
+        for (int i = 0; i < 100; i++)
+            Ar[i] = new Paper[1000];
 
 
-        for (int i = 0; i < size; i++) one[i] = new Paper();
+        for (int i = 0; i < size; i++)
+            one[i] = new Paper();
         for (int i = 0; i < 100; i++)
             for (int j = 0; j < 1000; j++)
             {
