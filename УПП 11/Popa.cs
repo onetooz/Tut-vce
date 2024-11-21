@@ -1,5 +1,4 @@
 ﻿//using class_ResearchTeam;
-using System;
 using System.Net;
 using System.Runtime.CompilerServices;
 using УПП_11;
@@ -66,39 +65,34 @@ public class ResearchTeam
         get { return time == timeFrame; }
     }
 
-    public void AddPaper()
+    public Paper LatestPublication
     {
-        if (publications == null)
+        get
         {
-            publications = new Paper[1];
+            if (publications == null || publications.Length == 0)
+            {
+                return null;
+            }
+            Paper latest = publications[0];
+            foreach (var publication in publications)
+            {
+                if (publication != null && publication.publicationDate > latest.publicationDate)
+                {
+                    latest = publication;
+                }
+            }
+            return latest;
         }
-        if (n >= publications.Length)
+    }
+
+    public void AddPaper(params Paper[] publications)
+    {
+        int Length = publications.Length;
+        Array.Resize(ref publications, Length + publications.Length);
+        for (int i = 0; i < publications.Length; i++)
         {
-            Array.Resize(ref publications, publications.Length + 1);
+            publications[Length + i] = publications[i];
         }
-        publications[n] = new Paper();
-        Console.Write("Введите название публикации :");
-        publications[n].title = Console.ReadLine();
-        Console.Write("Введите имя автора публикации :");
-        string name = Console.ReadLine();
-        Console.Write("Введите фамилию автора публикации:");
-        string surname = Console.ReadLine();
-        Console.Write("Введите день рождения автора публикации:");
-        int day = Convert.ToInt32(Console.ReadLine());
-        Console.Write("Введите месяц рождения автора публикации:");
-        int month = Convert.ToInt32(Console.ReadLine());
-        Console.Write("Введите год рождения автора публикации:");
-        int year = Convert.ToInt32(Console.ReadLine());
-        DateTime birthDate = new DateTime(year, month, day);
-        publications[n].author = new Person(name, surname, birthDate);
-        Console.Write("Введите день публикации:");
-        int pubday = Convert.ToInt32(Console.ReadLine());
-        Console.Write("Введите месяц публикации:");
-        int pubmonth = Convert.ToInt32(Console.ReadLine());
-        Console.Write("Введите год публикации:");
-        int pubyear = Convert.ToInt32(Console.ReadLine());
-        publications[n].publicationDate = new DateTime(pubyear, pubmonth, pubday);
-        n++;
     }
 
     public override string ToString()
@@ -134,9 +128,25 @@ public class ResearchTeam
     {
         return "Тема исследований : " + theme + "\nНазвание исследовательской огранизации : " + orgname + "\nРегистрационный номер исследований : " + regnum + "\nВремя отведённое на исследования : " + time;
     }
+}
 
-    //public void AddPaper(params Paper[] papers)
-    //{
-    //    throw new NotImplementedException();
-    //}
+public class Programm
+{
+    public static void Main()
+    {
+        TimeFrame time = TimeFrame.Year;
+        int n = 1;
+        ResearchTeam bag = new ResearchTeam("Литералы", "Лобачи Интернешнл", 12, time);
+        DateTime birthday = new DateTime(2001, 07, 11);
+        DateTime pubtime = new DateTime(2020, 03, 23);
+        Person Vania = new Person("Vania", "Lobach", birthday);
+        Paper[] mas = new Paper[n];
+        for (int i = 0; i < n; i++)
+        {
+            bag.AddPaper();
+        }
+        Console.WriteLine(bag.ToString());
+        Console.WriteLine(bag[time]);
+
+    }
 }
