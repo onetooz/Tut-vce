@@ -51,7 +51,46 @@ public class Person
 
     public virtual string ToShortString()
     {
-        return $" Имя {name} Фамиия {surname}";
+        return $" Имя {name} Фамилия {surname}";
+    }
+
+    // Переопределение метода Equals
+    public override bool Equals(object obj)
+    {
+        if (obj == null || GetType() != obj.GetType())
+        {
+            return false;
+        }
+
+        Person other = (Person)obj;
+        return name == other.name && surname == other.surname && birthDate == other.birthDate;
+    }
+
+    // Переопределение оператора ==
+    public static bool operator ==(Person lhs, Person rhs)
+    {
+        if (ReferenceEquals(lhs, null))
+        {
+            return ReferenceEquals(rhs, null);
+        }
+        return lhs.Equals(rhs);
+    }
+
+    // Переопределение оператора !=
+    public static bool operator !=(Person lhs, Person rhs)
+    {
+        return !(lhs == rhs);
+    }
+
+    // Переопределение метода GetHashCode
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(name, surname, birthDate);
+    }
+
+    // Метод для глубокой копии объекта
+    public Person DeepCopy()
+    {
+        return new Person(name, surname, birthDate);
     }
 }
-
