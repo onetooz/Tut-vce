@@ -1,6 +1,12 @@
 ﻿enum TimeFrame { Year, TwoYears, Long }
 
-public class Person
+public interface INameAndCopy
+{
+    string Name { get; set; }
+    object DeepCopy();
+}
+
+public class Person : INameAndCopy
 {
     private string name;
     private string surname;
@@ -17,7 +23,7 @@ public class Person
     {
         name = "default";
         surname = "default";
-        birthDate = new DateTime(1, 01, 2000);
+        birthDate = new DateTime(2000, 01, 1);
     }
 
     public string Name
@@ -51,7 +57,7 @@ public class Person
 
     public virtual string ToShortString()
     {
-        return $" Имя {name} Фамилия {surname}";
+        return $"Имя: {name}, Фамилия: {surname}";
     }
 
     // Переопределение метода Equals
@@ -89,8 +95,9 @@ public class Person
     }
 
     // Метод для глубокой копии объекта
-    public Person DeepCopy()
+    public virtual object DeepCopy()
     {
         return new Person(name, surname, birthDate);
     }
 }
+
