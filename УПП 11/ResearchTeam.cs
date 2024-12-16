@@ -1,131 +1,153 @@
 ﻿//using class_ResearchTeam;
+using System.Collections;
 using System.Net;
 using System.Runtime.CompilerServices;
 using УПП_11;
 
 public enum TimeFrame { Year, TwoYears, Long };
-public class ResearchTeam
+public class ResearchTeam : Team, INameAndCopy, IEnumerable
 {
-
-    private string theme;
-    private string orgname;
-    private int regnum;
+    private string searchname;
     private TimeFrame time;
-    private Paper[] publications;
-    private int n;
+    private ArrayList members;
+    private ArrayList publications;
 
-    public ResearchTeam(string theme, string orgname, int regnum, TimeFrame time)
+    public ResearchTeam(string searchname, string organizationName, int registrationNumber, TimeFrame time) : base(organizationName, registrationNumber)
     {
-        this.theme = theme;
-        this.orgname = orgname;
-        this.regnum = regnum;
+        this.searchname = searchname;
         this.time = time;
+        members = new ArrayList();
+        publications = new ArrayList();
     }
 
-    public ResearchTeam()
+    public ResearchTeam() : base()
     {
-        theme = "Не выбрана";
-        orgname = "Отсудствует";
-        regnum = 0;
+        searchname = "default";
         time = TimeFrame.Year;
+        members = new ArrayList();
+        publications = new ArrayList();
     }
 
-    public string Theme
-    {
-        get { return theme; }
-        set { theme = value; }
-    }
-
-    public string OrgName
-    {
-        get { return orgname; }
-        set { orgname = value; }
-    }
-
-    public int RegNum
-    {
-        get { return regnum; }
-        set { regnum = value; }
-    }
-
-    public TimeFrame Time
-    {
-        get { return time; }
-        set { time = value; }
-    }
-
-    public Paper[] Publications
+    public ArrayList Publications
     {
         get { return publications; }
-        set { publications = value; }
-    }
-
-    public bool this[TimeFrame timeFrame]
-    {
-        get { return time == timeFrame; }
     }
 
     public Paper LatestPublication
     {
         get
         {
-            if (publications == null || publications.Length == 0)
-            {
+            if (publications.Count == 0)
                 return null;
-            }
-            Paper latest = publications[0];
-            foreach (var publication in publications)
+
+            Paper latest = (Paper)publications[0];
+            foreach (Paper paper in publications)
             {
-                if (publication != null && publication.publicationDate > latest.publicationDate)
+                if (paper.publicationDate > latest.publicationDate)
                 {
-                    latest = publication;
+                    latest = paper;
                 }
             }
             return latest;
         }
     }
 
-    public void AddPaper(params Paper[] publications)
+    public void AddPapers(params Paper[] newPapers)
     {
-        int Length = publications.Length;
-        Array.Resize(ref publications, Length + publications.Length);
-        for (int i = 0; i < publications.Length; i++)
+        publications.AddRange(newPapers);
+    }
+
+    public ArrayList Participants
+    {
+        get { return members; }
+    }
+
+    public void AddMembers(params Person[] newParticipants)
+    {
+        members.AddRange(newParticipants);
+    }
+
+    public Team TeamData
+    {
+        get => new Team(OrganizationName, RegistrationNumber);
+        set
         {
-            publications[Length + i] = publications[i];
+            OrganizationName = value.OrganizationName;
+            RegistrationNumber = value.RegistrationNumber;
         }
     }
 
     public override string ToString()
     {
-        string result = $"Тема исследований: {theme}" + $"\n" +
-        $"Название исследовательской организации: {orgname}\n" +
-        $"Регистрационный номер исследований: {regnum}\n" +
-        $"Время, отведённое на исследования: {time}\n" +
-        $"Количество публикаций: {publications?.Length}\n";
-        if (publications != null && publications.Length > 0)
-        {
-            result += "Публикации:\n";
-            for (int i = 0; i < publications.Length; i++)
-            {
-                if (publications[i] != null)
-                {
-                    result += $" Публикация {i + 1}:" +
-                    $"\n" + $" Название: {publications[i].title}" +
-                    $"\n" + $" Автор: {publications[i].author.Name} {publications[i].author.Surname}" +
-                    $"\n" + $" Дата рождения автора: {publications[i].author.BirthDate.ToShortDateString()}" +
-                    $"\n" + $" Дата публикации: {publications[i].publicationDate.ToShortDateString()}" + $"\n";
-                }
-            }
-        }
-        else
-        {
-            result += "Публикаций нет.\n";
-        }
-        return result;
+        string participantInfo = "Участники: " + string.Join(", ", members.Cast<Person>());
+        string publicationInfo = "Публикации: " + string.Join(", ", publications.Cast<Paper>());
+
+        return $"Тема: {searchname}, Продолжительность: {time}, {base.ToString()}, {participantInfo}, {publicationInfo}";
     }
 
-    public virtual string ToShortString()
+    public string ToShortString()
     {
-        return "Тема исследований : " + theme + "\nНазвание исследовательской огранизации : " + orgname + "\nРегистрационный номер исследований : " + regnum + "\nВремя отведённое на исследования : " + time;
+        return $"Тема: {searchname}, Продолжительность: {time}, {base.ToString()}";
+    }
+
+    public override object DeepCopy()
+    {
+        ResearchTeam copy = new ResearchTeam(this.searchname, this.OrganizationName, this.RegistrationNumber, this.time)
+        {
+            members = (ArrayList)members.Clone(),
+            publications = (ArrayList)publications.Clone()
+        };
+        return copy;
+    }
+
+    public IEnumerator GetEnumerator()
+    {
+        foreach (Person participant in members)
+        {
+            if (!publications.Cast<Paper>().Any(p => p.author == participant))
+            {
+                yield return participant;
+            }
+        }
+    }
+
+    public IEnumerable<Paper> GetRecentPublications(int years)
+    {
+        DateTime threshold = DateTime.Now.AddYears(-years);
+        foreach (Paper paper in publications)
+        {
+            if (paper.publicationDate >= threshold)
+            {
+                yield return paper;
+            }
+        }
+    }
+
+    public IEnumerable<Person> GetParticipantsWithMultiplePublications()
+    {
+        foreach (Person participant in members)
+        {
+            int count = publications.Cast<Paper>().Count(p => p.author == participant);
+            if (count > 1)
+            {
+                yield return participant;
+            }
+        }
+    }
+
+    public IEnumerable<Paper> GetPublicationsFromLastYear()
+    {
+        return GetRecentPublications(1);
+    }
+
+    public IEnumerator<Person> GetEnumeratorWithPublications()
+    {
+        foreach (Person participant in members)
+        {
+            if (publications.Cast<Paper>().Any(p => p.author == participant))
+            {
+                yield return participant;
+            }
+        }
     }
 }

@@ -7,126 +7,71 @@ using УПП_11;
 
 public class Programm
 {
-    public static void Main()
+    static void Main(string[] args)
     {
-        Console.Write("Введите тему исследований: ");
-        string theme = Console.ReadLine();
+        // Пункт 1. Проверка класса Team
+        Console.WriteLine("\n=== Пункт 1. Проверка класса Team ===");
+        Team team1 = new Team("Организация1", 123);
+        Team team2 = new Team("Организация1", 123);
+        Console.WriteLine("Объекты равны: " + (team1 == team2)); // True
+        Console.WriteLine("Ссылки равны: " + ReferenceEquals(team1, team2)); // False
+        Console.WriteLine("Хэш-коды: " + team1.GetHashCode() + " и " + team2.GetHashCode());
 
-        Console.Write("Введите название организации: ");
-        string orgName = Console.ReadLine();
-
-        Console.Write("Введите регистрационный номер исследований: ");
-        int regNum = int.Parse(Console.ReadLine());
-
-        Console.WriteLine("Выберите временной интервал (0 - Year, 1 - TwoYears, 2 - Long): ");
-        TimeFrame timeFrame = (TimeFrame)int.Parse(Console.ReadLine());
-
-        ResearchTeam researchTeam = new ResearchTeam(theme, orgName, regNum, timeFrame);
-
-        Console.WriteLine("\nПроверка индексатора:");
-        foreach (TimeFrame frame in Enum.GetValues(typeof(TimeFrame)))
+        try
         {
-            Console.WriteLine($"Для {frame}: {researchTeam[frame]}");
+            team1.RegistrationNumber = -5;
+        }
+        catch (ArgumentOutOfRangeException ex)
+        {
+            Console.WriteLine("Ошибка: " + ex.Message);
         }
 
-        Console.WriteLine("\nПрисваивание новых значений свойствам...");
-        Console.Write("Введите тему исследований: ");
-        researchTeam.Theme = Console.ReadLine();
-        Console.Write("Введите название организации: ");
-        researchTeam.OrgName = Console.ReadLine();
-        Console.Write("Введите регистрационный номер исследований: ");
-        researchTeam.RegNum = int.Parse(Console.ReadLine());
-        Console.WriteLine("Выберите временной интервал (0 - Year, 1 - TwoYears, 2 - Long): ");
-        researchTeam.Time = (TimeFrame)int.Parse(Console.ReadLine());
+        // Пункт 2. Создание ResearchTeam
+        Console.WriteLine("\n=== Пункт 2. Создание ResearchTeam ===");
+        ResearchTeam researchTeam = new ResearchTeam("ИИ Исследования", "Tech Corp", 456, TimeFrame.TwoYears);
+        researchTeam.AddMembers(new Person("Алиса", "Смит", new DateTime(1985, 5, 10)),
+                                 new Person("Боб", "Браун", new DateTime(1990, 8, 20)));
 
-        Console.WriteLine("\nПолная информация:");
-        Console.WriteLine(researchTeam.ToString());
+        researchTeam.AddPapers(new Paper("ИИ в 2024 году", new Person("Алиса", "Смит", new DateTime(1985, 5, 10)), DateTime.Now),
+                               new Paper("Тренды машинного обучения", new Person("Боб", "Браун", new DateTime(1990, 8, 20)), DateTime.Now.AddYears(-1)));
 
-        Console.WriteLine("\nДобавление публикаций...");
-        Console.Write("Сколько публикаций вы хотите добавить? ");
-        int numPapers = int.Parse(Console.ReadLine());
+        Console.WriteLine(researchTeam);
+        Console.WriteLine("Объект Team: " + researchTeam.TeamData);
 
-        for (int i = 0; i < numPapers; i++)
+        // Пункт 3. DeepCopy
+        Console.WriteLine("\n=== Пункт 3. DeepCopy ===");
+        ResearchTeam copiedTeam = (ResearchTeam)researchTeam.DeepCopy();
+        researchTeam.OrganizationName = "Изменённая организация";
+        Console.WriteLine("Исходный объект:");
+        Console.WriteLine(researchTeam);
+        Console.WriteLine("Копия объекта:");
+        Console.WriteLine(copiedTeam);
+
+        // Пункт 4. Итераторы
+        Console.WriteLine("\n=== Пункт 4. Итераторы ===");
+        Console.WriteLine("Участники без публикаций:");
+        foreach (Person p in researchTeam)
         {
-            Console.WriteLine($"\nДобавление публикации {i + 1}:");
-            researchTeam.AddPaper();
-        }
-      //  researchTeam.AddPaper(new Paper(), new Paper(),new Paper());
-
-        Console.WriteLine("\nДанные после добавления публикаций:");
-        Console.WriteLine(researchTeam.ToString());
-
- 
-        Paper latestPaper = Find(researchTeam.Publications);
-        if (latestPaper != null)
-        {
-            Console.WriteLine("\nСамая поздняя публикация:");
-            Console.WriteLine(latestPaper.ToString());
+            Console.WriteLine(p);
         }
 
-        Console.WriteLine("\nСравнение времени работы с массивами...");
-        Comp();
-    }
-
-    static Paper Find(Paper[] publications)
-    {
-        if (publications == null || publications.Length == 0) return null;
-
-        Paper latest = publications[0];
-        foreach (var paper in publications)
+        Console.WriteLine("Публикации за последние 2 года:");
+        foreach (Paper p in researchTeam.GetRecentPublications(2))
         {
-            if (paper != null && paper.publicationDate > latest.publicationDate)
-                latest = paper;
+            Console.WriteLine(p);
         }
-        return latest;
-    }
 
-    static void Comp()
-    {
-        int size = 100000;
-        var one = new Paper[size];
-        var two = new Paper[100, 1000];
-        var Ar = new Paper[100][];
-        for (int i = 0; i < 100; i++)
-            Ar[i] = new Paper[1000];
-
-
-        for (int i = 0; i < size; i++)
-            one[i] = new Paper();
-        for (int i = 0; i < 100; i++)
-            for (int j = 0; j < 1000; j++)
-            {
-                two[i, j] = new Paper();
-                Ar[i][j] = new Paper();
-            }
-
-        var watch = new Stopwatch();
-
-
-        watch.Restart();
-        for (int i = 0; i < size; i++)
+        Console.WriteLine("Участники с более чем одной публикацией:");
+        foreach (Person p in researchTeam.GetParticipantsWithMultiplePublications())
         {
-            one[i].title="qwerty";
+            Console.WriteLine(p);
         }
-        watch.Stop();
-        Console.WriteLine($"Время работы с одномерным массивом: {watch.ElapsedMilliseconds} ms");
 
-        watch.Restart();
-        for (int i = 0; i < 100; i++)
-            for (int j = 0; j < 1000; j++)
-            {
-                two[i, j].title="qwerty";
-            }
-        watch.Stop();
-        Console.WriteLine($"Время работы с двумерным массивом: {watch.ElapsedMilliseconds} ms");
-
-        watch.Restart();
-        for (int i = 0; i < 100; i++)
-            for (int j = 0; j < 1000; j++)
-            {
-                Ar[i][j].title="qwerty";
-            }
-        watch.Stop();
-        Console.WriteLine($"Время работы с зубчатым массивом: {watch.ElapsedMilliseconds} ms");
+        Console.WriteLine("Публикации за последний год:");
+        foreach (Paper p in researchTeam.GetPublicationsFromLastYear())
+        {
+            Console.WriteLine(p);
+        }
     }
 }
+
